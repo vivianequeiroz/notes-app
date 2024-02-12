@@ -24,7 +24,9 @@ function NoteCard({ date, content }: NoteCardsProps) {
 
       <Dialog.Portal>
         <Dialog.Overlay className="inset-0 fixed bg-black/50" />
-        <Dialog.Content className="z-10 absolute">Hii</Dialog.Content>
+        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[640px] w-full bg-slate-700 outline-none rounded-md flec flex-col">
+          Hii
+        </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
   );
