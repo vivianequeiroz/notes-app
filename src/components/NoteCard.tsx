@@ -16,7 +16,7 @@ function NoteCard({ date, content }: NoteCardsProps) {
         tabIndex={0}
       >
         <h3 className="text-sm font-medium text-slate-300">
-          {formatDistanceToNow(date)}
+          {formatDistanceToNow(date, { addSuffix: true })}
         </h3>
         <p className="text-sm leading-6 text-slate-400">{content}</p>
 
@@ -33,7 +33,7 @@ function NoteCard({ date, content }: NoteCardsProps) {
 
           <div className="flex flex-1 flex-col gap-3 p-5">
             <h3 className="text-sm font-medium text-slate-300">
-              {formatDistanceToNow(date)}
+              {formatDistanceToNow(date, { addSuffix: true })}
             </h3>
             <p className="text-sm leading-6 text-slate-400">{content}</p>
           </div>

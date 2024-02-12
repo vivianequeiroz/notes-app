@@ -10,3 +10,5 @@ function NewNoteCard() {
 }
 
 export default NewNoteCard;
+
+//29 min
