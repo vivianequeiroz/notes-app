@@ -2,12 +2,29 @@ import NoteCard from "./components/NoteCard";
 import NewNoteCard from "./components/NewNoteCard";
 import { useState } from "react";
 import type { Note } from "./types/note";
+import useLocalStorage from "./hooks/useLocalStorage";
+
+const NOTES_LOCALSTORAGE_KEY = "notes";
 
 function App() {
-  const [notes, setNotes] = useState<Array<Note> | []>([]);
+  const { setItem, getItem } = useLocalStorage();
+
+  const notesInLocalStorage = getItem(NOTES_LOCALSTORAGE_KEY);
+
+  const [notes, setNotes] = useState<Array<Note>>(() => {
+    if (notesInLocalStorage) {
+      return JSON.parse(notesInLocalStorage);
+    }
+
+    return [];
+  });
 
   function handleNoteSaved(note: Note) {
-    setNotes([note, ...notes]);
+    const notesList = [note, ...notes];
+
+    setNotes(notesList);
+
+    setItem(NOTES_LOCALSTORAGE_KEY, notesList);
   }
   return (
     <div className="mx-auto max-w-6xl my-12 space-y-6">
