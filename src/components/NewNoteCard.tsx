@@ -2,8 +2,13 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
+import { Note } from "../types/note";
 
-function NewNoteCard() {
+interface NewNoteCardProps {
+  onNoteCreated: (note: Note) => void;
+}
+
+function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   const [shouldShowCTA, setShouldShowCTA] = useState(true);
   const [content, setContent] = useState("");
 
@@ -25,7 +30,16 @@ function NewNoteCard() {
 
   function handleSaveNote(event: FormEvent) {
     event.preventDefault();
-    console.log(content);
+
+    onNoteCreated({
+      id: crypto.randomUUID(),
+      content: content,
+      date: new Date(),
+    });
+
+    setContent("");
+
+    setShouldShowCTA(true);
 
     toast.success("Note created!");
   }
@@ -70,6 +84,7 @@ function NewNoteCard() {
                 <textarea
                   autoFocus
                   className="text-sm  leading-6 text-slate-400 bg-transparent resize-none flex-1 outline-none"
+                  value={content}
                   onChange={handleContentChanged}
                 />
               )}

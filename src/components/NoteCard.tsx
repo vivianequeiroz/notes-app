@@ -1,13 +1,9 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { formatDistanceToNow } from "date-fns";
 import { X } from "lucide-react";
+import { Note } from "../types/note";
 
-interface NoteCardsProps {
-  date: Date;
-  content: string;
-}
-
-function NoteCard({ date, content }: NoteCardsProps) {
+function NoteCard({ date, content }: Note) {
   return (
     <Dialog.Root>
       <Dialog.Trigger
