@@ -9,6 +9,7 @@ interface NewNoteCardProps {
 
 function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   const [shouldShowCTA, setShouldShowCTA] = useState(true);
+  const [isRecording, setIsRecording] = useState(false);
   const [content, setContent] = useState("");
 
   function handleStartEditor() {
@@ -27,6 +28,21 @@ function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
     setContent(content);
   }
 
+  function handleStartRecording() {
+    setIsRecording(true);
+  }
+
+  function handleStopRecording() {
+    setIsRecording(false);
+  }
+
+  function handleModalClose(open: boolean) {
+    if (!open) {
+      setShouldShowCTA(true);
+      setIsRecording(false);
+    }
+  }
+
   function handleSaveNote(event: FormEvent) {
     event.preventDefault();
 
@@ -42,7 +58,7 @@ function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   }
 
   return (
-    <Dialog.Root>
+    <Dialog.Root modal onOpenChange={handleModalClose}>
       <Dialog.Trigger className="rounded-md bg-slate-700 p-5 flex flex-col text-left space-y-3 overflow-hidden outline-none hover:ring-2 hover:ring-slate-600 focus:ring-2 focus:ring-lime-400">
         <h3 className="text-sm font-medium text-slate-200">Add note</h3>
         <p className="text-sm leading-6 text-slate-400">
@@ -57,7 +73,7 @@ function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
             <X className="size-5" />
           </Dialog.Close>
 
-          <form className="flex flex-1 flex-col" onSubmit={handleSaveNote}>
+          <form className="flex flex-1 flex-col">
             <div className="flex flex-1 flex-col gap-3 p-5">
               <span className="text-sm font-medium text-slate-200">
                 Add note
@@ -65,13 +81,18 @@ function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
               {shouldShowCTA ? (
                 <p className="text-sm leading-6 text-slate-400">
                   Start{" "}
-                  <button className="font-medium text-lime-500 hover:underline">
+                  <button
+                    type="button"
+                    onClick={handleStartRecording}
+                    className="font-medium text-lime-500 hover:underline"
+                  >
                     recording a note
                   </button>{" "}
                   with audio or if you prefer{" "}
                   <button
-                    className="font-medium text-lime-500 hunder:underline"
+                    type="button"
                     onClick={handleStartEditor}
+                    className="font-medium text-lime-500 hunder:underline"
                   >
                     use only text
                   </button>
@@ -80,19 +101,31 @@ function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
               ) : (
                 <textarea
                   autoFocus
-                  className="text-sm  leading-6 text-slate-400 bg-transparent resize-none flex-1 outline-none"
                   value={content}
                   onChange={handleContentChanged}
+                  className="text-sm  leading-6 text-slate-400 bg-transparent resize-none flex-1 outline-none"
                 />
               )}
             </div>
 
-            <button
-              type="submit"
-              className="w-full bg-lime-400 py-4 text-center text-lime-950 font-medium outline-none hover:bg-lime-500"
-            >
-              Save note
-            </button>
+            {isRecording ? (
+              <button
+                type="button"
+                onClick={handleStopRecording}
+                className="w-full flex items-center justify-center gap-2 bg-slate-900 py-4 text-center text-slate-350 font-medium outline-none hover:text-slate-100"
+              >
+                <div className="size-3 rounded-full bg-red-500 animate-pulse" />
+                Recording... Click to interrupt
+              </button>
+            ) : (
+              <button
+                type="submit"
+                onClick={handleSaveNote}
+                className="w-full bg-lime-400 py-4 text-center text-lime-950 font-medium outline-none hover:bg-lime-500"
+              >
+                Save note
+              </button>
+            )}
           </form>
         </Dialog.Content>
       </Dialog.Portal>
