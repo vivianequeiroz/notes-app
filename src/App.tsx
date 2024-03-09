@@ -1,7 +1,14 @@
 import NoteCard from "./components/NoteCard";
 import NewNoteCard from "./components/NewNoteCard";
+import { useState } from "react";
+import type { Note } from "./types/note";
 
 function App() {
+  const [notes, setNotes] = useState<Array<Note> | []>([]);
+
+  function handleNoteSaved(note: Note) {
+    setNotes([note, ...notes]);
+  }
   return (
     <div className="mx-auto max-w-6xl my-12 space-y-6">
       <form>
@@ -15,11 +22,18 @@ function App() {
       <div className="h-px bg-slate-700" />
 
       <div className="grid grid-cols-3 gap-6 auto-rows-[250px]">
-        <NewNoteCard />
+        <NewNoteCard onNoteCreated={handleNoteSaved} />
 
-        <NoteCard date={new Date()} content="test" />
-        <NoteCard date={new Date()} content="test" />
-        <NoteCard date={new Date()} content="test" />
+        {notes.map((note: Note) => {
+          return (
+            <NoteCard
+              key={note.id}
+              id={note.id}
+              content={note.content}
+              date={note.date}
+            />
+          );
+        })}
       </div>
     </div>
   );
