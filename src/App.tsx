@@ -3,6 +3,7 @@ import NewNoteCard from "./components/NewNoteCard";
 import { ChangeEvent, useState } from "react";
 import type { Note } from "./types/note";
 import useLocalStorage from "./hooks/useLocalStorage";
+import { toast } from "sonner";
 
 const NOTES_LOCALSTORAGE_KEY = "notes";
 
@@ -26,6 +27,8 @@ function App() {
     setNotes(notesList);
 
     setItem(NOTES_LOCALSTORAGE_KEY, notesList);
+
+    toast.success("Note created!");
   }
 
   function handleSearch(event: ChangeEvent<HTMLInputElement>) {
@@ -41,6 +44,15 @@ function App() {
   );
 
   const notesToShow = emptySearch ? notes : filteredNotes;
+
+  function handleNoteDeleted(noteDeleted: Note) {
+    const updatedNotes = notes.filter((note) => note.id !== noteDeleted.id);
+
+    setNotes(updatedNotes);
+    setItem(NOTES_LOCALSTORAGE_KEY, updatedNotes);
+
+    toast.success("Note deleted");
+  }
 
   return (
     <div className="mx-auto max-w-6xl my-12 space-y-6">
@@ -62,9 +74,8 @@ function App() {
           return (
             <NoteCard
               key={note.id}
-              id={note.id}
-              content={note.content}
-              date={note.date}
+              note={note}
+              onNoteDeleted={handleNoteDeleted}
             />
           );
         })}

@@ -1,7 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { toast } from "sonner";
 import { Note } from "../types/note";
 
 interface NewNoteCardProps {
@@ -40,8 +39,6 @@ function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
     setContent("");
 
     setShouldShowCTA(true);
-
-    toast.success("Note created!");
   }
 
   return (

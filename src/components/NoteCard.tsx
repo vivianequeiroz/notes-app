@@ -3,7 +3,13 @@ import { formatDistanceToNow } from "date-fns";
 import { X } from "lucide-react";
 import { Note } from "../types/note";
 
-function NoteCard({ date, content }: Note) {
+interface NoteCardProps {
+  note: Note;
+  onNoteDeleted: (note: Note) => void;
+}
+
+function NoteCard({ note, onNoteDeleted }: NoteCardProps) {
+  const { date, content } = note;
   return (
     <Dialog.Root>
       <Dialog.Trigger
@@ -36,6 +42,7 @@ function NoteCard({ date, content }: Note) {
 
           <button
             type="button"
+            onClick={() => onNoteDeleted(note)}
             className="w-full bg-slate-800 py-4 text-center text-slate-300 font-medium outline-none group"
           >
             Do you want to{" "}
