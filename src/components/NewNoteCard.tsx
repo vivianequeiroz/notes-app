@@ -1,6 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { toast } from "sonner";
 
 function NewNoteCard() {
   const [shouldShowCTA, setShouldShowCTA] = useState(true);
@@ -25,6 +26,8 @@ function NewNoteCard() {
   function handleSaveNote(event: FormEvent) {
     event.preventDefault();
     console.log(content);
+
+    toast.success("Note created!");
   }
 
   return (
