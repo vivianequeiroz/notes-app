@@ -12,6 +12,8 @@ function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [content, setContent] = useState("");
 
+  let speechRecognition: SpeechRecognition | undefined = undefined;
+
   function handleStartEditor() {
     setShouldShowCTA(false);
   }
@@ -29,17 +31,51 @@ function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   }
 
   function handleStartRecording() {
-    setIsRecording(true);
-  }
+    const isSpeechRecognitionAPIAvailable =
+      "webkitSpeechRecognition" in window || "SpeechRecognition" in window;
 
-  function handleStopRecording() {
-    setIsRecording(false);
-  }
-
-  function handleModalClose(open: boolean) {
-    if (!open) {
-      setShouldShowCTA(true);
+    if (!isSpeechRecognitionAPIAvailable) {
+      alert("Speech recognition is not available in your browser");
       setIsRecording(false);
+
+      return;
+    }
+
+    setIsRecording(true);
+    setShouldShowCTA(false);
+
+    const SpeechRecognitionAPI =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    speechRecognition = new SpeechRecognitionAPI();
+
+    speechRecognition.lang = "en-US";
+    speechRecognition.continuous = true;
+    speechRecognition.maxAlternatives = 1;
+    speechRecognition.interimResults = true;
+
+    speechRecognition.onresult = (event) => {
+      const transcript = Array.from(event.results).reduce((text, result) => {
+        return text.concat(result[0].transcript);
+      }, "");
+
+      setContent(transcript);
+    };
+
+    speechRecognition.onerror = (event) => {
+      console.error(event.error);
+    };
+
+    speechRecognition.start();
+  }
+
+  function handleStopRecording(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+
+    setIsRecording(false);
+
+    if (speechRecognition) {
+      speechRecognition.stop();
     }
   }
 
@@ -62,7 +98,7 @@ function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   }
 
   return (
-    <Dialog.Root modal onOpenChange={handleModalClose}>
+    <Dialog.Root>
       <Dialog.Trigger className="rounded-md bg-slate-700 p-5 flex flex-col text-left space-y-3 overflow-hidden outline-none hover:ring-2 hover:ring-slate-600 focus:ring-2 focus:ring-lime-400">
         <h3 className="text-sm font-medium text-slate-200">Add note</h3>
         <p className="text-sm leading-6 text-slate-400">
@@ -138,5 +174,3 @@ function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
 }
 
 export default NewNoteCard;
-
-//30 min
