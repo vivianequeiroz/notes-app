@@ -46,6 +46,10 @@ function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   function handleSaveNote(event: FormEvent) {
     event.preventDefault();
 
+    if (content === "") {
+      return;
+    }
+
     onNoteCreated({
       id: crypto.randomUUID(),
       content: content,
@@ -134,3 +138,5 @@ function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
 }
 
 export default NewNoteCard;
+
+//30 min
